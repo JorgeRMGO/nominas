@@ -1,7 +1,5 @@
 <!-- ❗Errors in the form are set on line 60 -->
 <script setup>
-import { VForm } from 'vuetify/components/VForm'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
 import authV2LoginIllustrationBorderedLight from '@images/pages/auth-v2-login-illustration-bordered-light.png'
@@ -11,6 +9,7 @@ import authV2MaskDark from '@images/pages/misc-mask-dark.png'
 import authV2MaskLight from '@images/pages/misc-mask-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { VForm } from 'vuetify/components/VForm'
 
 const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
@@ -128,10 +127,10 @@ const onSubmit = () => {
       >
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
+            Nominas <span class="text-capitalize"> {{ themeConfig.app.title }} </span>
           </h4>
           <p class="mb-0">
-            Please sign-in to your account and start the adventure
+            Inicie sesión en su cuenta
           </p>
         </VCardText>
         <VCardText>
@@ -157,7 +156,7 @@ const onSubmit = () => {
               <VCol cols="12">
                 <AppTextField
                   v-model="credentials.email"
-                  label="Email"
+                  label="Correo electrónico *"
                   placeholder="johndoe@email.com"
                   type="email"
                   autofocus
@@ -170,7 +169,7 @@ const onSubmit = () => {
               <VCol cols="12">
                 <AppTextField
                   v-model="credentials.password"
-                  label="Password"
+                  label="Contraseña *"
                   placeholder="············"
                   :rules="[requiredValidator]"
                   :type="isPasswordVisible ? 'text' : 'password'"
@@ -182,26 +181,26 @@ const onSubmit = () => {
                 <div class="d-flex align-center flex-wrap justify-space-between my-6">
                   <VCheckbox
                     v-model="rememberMe"
-                    label="Remember me"
+                    label="Recordarme"
                   />
-                  <RouterLink
+                  <!-- <RouterLink
                     class="text-primary ms-2 mb-1"
                     :to="{ name: 'forgot-password' }"
                   >
                     Forgot Password?
-                  </RouterLink>
+                  </RouterLink> -->
                 </div>
 
                 <VBtn
                   block
                   type="submit"
                 >
-                  Login
+                  Entrar
                 </VBtn>
               </VCol>
 
               <!-- create account -->
-              <VCol
+              <!-- <VCol
                 cols="12"
                 class="text-center"
               >
@@ -220,15 +219,15 @@ const onSubmit = () => {
                 <VDivider />
                 <span class="mx-4">or</span>
                 <VDivider />
-              </VCol>
+              </VCol> -->
 
               <!-- auth providers -->
-              <VCol
+              <!-- <VCol
                 cols="12"
                 class="text-center"
               >
                 <AuthProvider />
-              </VCol>
+              </VCol> -->
             </VRow>
           </VForm>
         </VCardText>
@@ -238,5 +237,5 @@ const onSubmit = () => {
 </template>
 
 <style lang="scss">
-@use "@core-scss/template/pages/page-auth.scss";
+@use "@core-scss/template/pages/page-auth";
 </style>
