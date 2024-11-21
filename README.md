@@ -1,35 +1,31 @@
-# vue
+### INSTALACIÓN INICIAL DEL PROYECTO
 
-This template should help get you started developing with Vue 3 in Vite.
+🛠️ Requisitos previos
 
-## Recommended IDE Setup
+Instalar XAMPP
+    Descarga e instala XAMPP desde su página oficial.
+    Configura el servidor local para asegurarte de que los servicios de Apache y MySQL están activos.
 
-[VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur).
+Instalar Composer
+    Descarga e instala Composer desde su página oficial.
+    Asegúrate de agregar Composer al Path del sistema durante la instalación (opción habilitada por defecto).
 
-## Type Support for `.vue` Imports in TS
+Instalar Node.js
+    Descarga e instala Node.js desde la página oficial de Node.js.
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates.
+🛠️ Configuración en Windows (si se presenta un error de política de ejecución)
+Si al ejecutar comandos encuentras un error relacionado con la política de ejecución, sigue estos pasos:
 
-However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can run `Volar: Switch TS Plugin on/off` from VS Code command palette.
+Abre PowerShell como administrador.
+    Ejecuta el siguiente comando para modificar temporalmente la política de ejecución:
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
-## Customize configuration
+📦 Instalación del Proyecto
+Instalar dependencias con npm
+Ejecuta el siguiente comando para instalar las dependencias del proyecto, ignorando conflictos de versiones:
+    npm install --legacy-peer-deps
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
+Instalar dependencias de Composer
+Si el proyecto incluye dependencias PHP gestionadas con Composer, ejecuta:
+    composer install

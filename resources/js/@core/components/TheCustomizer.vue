@@ -1,7 +1,4 @@
 <script setup>
-import { useStorage } from '@vueuse/core'
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { useTheme } from 'vuetify'
 import {
   staticPrimaryColor,
   staticPrimaryDarkenColor,
@@ -13,7 +10,14 @@ import {
   Theme,
 } from '@core/enums'
 import { useConfigStore } from '@core/stores/config'
+import borderSkin from '@images/customizer-icons/border-light.svg'
+import collapsed from '@images/customizer-icons/collapsed-light.svg'
+import compact from '@images/customizer-icons/compact-light.svg'
+import defaultSkin from '@images/customizer-icons/default-light.svg'
 import horizontalLight from '@images/customizer-icons/horizontal-light.svg'
+import ltrSvg from '@images/customizer-icons/ltr-light.svg'
+import rtlSvg from '@images/customizer-icons/rtl-light.svg'
+import wideSvg from '@images/customizer-icons/wide-light.svg'
 import {
   AppContentLayoutNav,
   ContentWidth,
@@ -23,13 +27,9 @@ import {
   namespaceConfig,
 } from '@layouts/stores/config'
 import { themeConfig } from '@themeConfig'
-import borderSkin from '@images/customizer-icons/border-light.svg'
-import collapsed from '@images/customizer-icons/collapsed-light.svg'
-import compact from '@images/customizer-icons/compact-light.svg'
-import defaultSkin from '@images/customizer-icons/default-light.svg'
-import ltrSvg from '@images/customizer-icons/ltr-light.svg'
-import rtlSvg from '@images/customizer-icons/rtl-light.svg'
-import wideSvg from '@images/customizer-icons/wide-light.svg'
+import { useStorage } from '@vueuse/core'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { useTheme } from 'vuetify'
 
 const isNavDrawerOpen = ref(false)
 const configStore = useConfigStore()
@@ -58,7 +58,7 @@ const colors = [
   },
 ]
 
-const customPrimaryColor = ref('#663131')
+const customPrimaryColor = ref('#f07d42')
 
 watch(() => configStore.theme, () => {
   const cookiePrimaryColor = cookieRef(`${ vuetifyTheme.name.value }ThemePrimaryColor`, null).value

@@ -157,7 +157,7 @@ const onSubmit = () => {
                 <AppTextField
                   v-model="credentials.email"
                   label="Correo electrónico *"
-                  placeholder="johndoe@email.com"
+                  placeholder="usuario@email.com"
                   type="email"
                   autofocus
                   :rules="[requiredValidator, emailValidator]"
