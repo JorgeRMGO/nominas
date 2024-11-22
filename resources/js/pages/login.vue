@@ -76,6 +76,10 @@ const onSubmit = () => {
       login()
   })
 }
+
+const checkbox = ref(false)
+
+
 </script>
 
 <template>
@@ -145,6 +149,23 @@ const onSubmit = () => {
                     Forgot Password?
                   </RouterLink> -->
                 </div>
+                <VCheckbox v-model="checkbox">
+                  <template #label>
+                    <div>
+                      Aviso de privacidad
+                      <VTooltip location="bottom">
+                        <template #activator="{ props }">
+                          <a href="https://vuetifyjs.com/" target="_blank" rel="noopener noreferrer" v-bind="props"
+                            @click.stop>
+                            GO
+                          </a>
+                        </template>
+                        Opens in new window
+                      </VTooltip>
+                    </div>
+                  </template>
+                </VCheckbox>
+
 
                 <VBtn block type="submit">
                   Entrar
