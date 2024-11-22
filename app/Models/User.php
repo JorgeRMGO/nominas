@@ -18,8 +18,20 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username', 
         'email',
         'password',
+        'signature',  
+        'two_factor_secret',
+        'two_factor_recovery_codes', 
+        'two_factor_confirmed_at',  
+        'remember_token',
+        'current_team_id', 
+        'current_branch_office_id',  
+        'profile_photo_path', 
+        'default_locale', 
+        'request_change_password',  
+        'password_expires_at',  
     ];
 
     /**
@@ -30,6 +42,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes', 
     ];
 
     /**
@@ -42,6 +56,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'two_factor_confirmed_at' => 'datetime',  // Agregado
+            'password_expires_at' => 'datetime',  // Agregado
         ];
     }
 }
