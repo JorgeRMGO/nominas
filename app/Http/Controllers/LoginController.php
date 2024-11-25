@@ -40,7 +40,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $accessToken = $user->createToken('GrupoOrtiz')->accessToken;
+            $accessToken = $user->createToken($user->name, ['*'], now()->addMinutes(1440))->accessToken;
 
             return response()->json([
                 'status' => 'success',
