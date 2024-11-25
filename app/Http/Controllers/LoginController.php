@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,11 +13,10 @@ class LoginController extends Controller
     {
         // Validamos las credenciales
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'identifier' => 'required|string',
             'password' => 'required|string|min:6',
         ]);
 
-        // Si la validación falla, retornamos los errores
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
@@ -26,10 +24,23 @@ class LoginController extends Controller
             ], 400);
         }
 
-        // Intentamos autenticar al usuario usando los datos proporcionados
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        // Intentamos autenticar al usuario usando email o username
+        $credentials = [
+            'password' => $request->password,
+        ];
+
+        // Determinamos si el identificador es un email o un username
+        $identifier = $request->identifier;
+        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+            $credentials['email'] = $identifier;
+
+        } else {
+            $credentials['username'] = $identifier;
+        }
+
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $accessToken = $user->createToken('YourAppName')->accessToken; // Usando Passport para generar un token de acceso
+            $accessToken = $user->createToken('GrupoOrtiz')->accessToken;
 
             return response()->json([
                 'status' => 'success',
@@ -43,6 +54,4 @@ class LoginController extends Controller
             'message' => 'Credenciales incorrectas.',
         ], 401);
     }
-
-    
 }

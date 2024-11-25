@@ -7,6 +7,8 @@ import authV2MaskDark from '@images/pages/misc-mask-dark.png'
 import authV2MaskLight from '@images/pages/misc-mask-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
+import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { VForm } from 'vuetify/components/VForm'
 
 //Logo de GO
@@ -32,41 +34,56 @@ const ability = useAbility()
 const errors = ref({
   email: undefined,
   password: undefined,
+  general: undefined,
 })
 
 const refVForm = ref()
 
 const credentials = ref({
-  email: 'admin@demo.com',
-  password: 'admin',
+  email: '',
+  password: '',
 })
 
 const rememberMe = ref(false)
 
 const login = async () => {
   try {
-    const res = await $api('/auth/login', {
+    const response = await fetch('api/login', {
       method: 'POST',
-      body: {
-        email: credentials.value.email,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        identifier: credentials.value.identifier,
         password: credentials.value.password,
-      },
-      onResponseError({ response }) {
-        errors.value = response._data.errors
-      },
+      }),
     })
 
-    const { accessToken, userData, userAbilityRules } = res
+    const data = await response.json()
 
-    useCookie('userAbilityRules').value = userAbilityRules
-    ability.update(userAbilityRules)
-    useCookie('userData').value = userData
+    if (!response.ok) {
+      // Procesar errores específicos del servidor
+      const errorData = data
+      errors.value.general = errorData.message || 'Credenciales incorrectas'
+      return
+    }
+    else {
+      console.log(data)
+    }
+
+    const { accessToken, userData } = data
+
+    // Guardar datos del usuario en cookies o almacenamiento local
     useCookie('accessToken').value = accessToken
+    useCookie('userData').value = userData
+    //router.push('/');
+    // Redirigir a la página principal o la ruta original
     await nextTick(() => {
       router.replace(route.query.to ? String(route.query.to) : '/')
     })
-  } catch (err) {
-    console.error(err)
+  } catch (error) {
+    errors.value.general = 'Error al conectar con el servidor. Intente de nuevo.'
+    console.error('Error al iniciar sesión:', error.message)
   }
 }
 
@@ -98,7 +115,6 @@ const onSubmit = () => {
         <img class="auth-footer-mask" :src="authThemeMask" alt="auth-footer-mask" height="280" width="100">
       </div>
     </VCol>
-
     <VCol cols="12" md="4" class="auth-card-v2 d-flex align-center justify-center">
       <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-4">
         <VCardText>
@@ -110,22 +126,17 @@ const onSubmit = () => {
           </p>
         </VCardText>
         <VCardText>
-          <VAlert color="primary" variant="tonal">
-            <p class="text-sm mb-2">
-              Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
-            </p>
-            <p class="text-sm mb-0">
-              Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
-            </p>
-          </VAlert>
-        </VCardText>
-        <VCardText>
           <VForm ref="refVForm" @submit.prevent="onSubmit">
             <VRow>
+              <!-- General Error -->
+              <VCol cols="12" v-if="errors.general">
+                <VAlert type="error" dismissible>{{ errors.general }}</VAlert>
+              </VCol>
               <!-- email -->
               <VCol cols="12">
-                <AppTextField v-model="credentials.email" label="Correo electrónico *" placeholder="usuario@email.com"
-                  type="email" autofocus :rules="[requiredValidator, emailValidator]" :error-messages="errors.email" />
+                <AppTextField v-model="credentials.identifier" label="Correo electrónico o nombre de usuario *"
+                  placeholder="usuario@email.com o username" type="text" autofocus :rules="[requiredValidator]"
+                  :error-messages="errors.identifier" />
               </VCol>
 
               <!-- password -->
