@@ -1,9 +1,9 @@
 <script setup>
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import ComposeDialog from '@/views/apps/email/ComposeDialog.vue'
 import EmailLeftSidebarContent from '@/views/apps/email/EmailLeftSidebarContent.vue'
 import EmailView from '@/views/apps/email/EmailView.vue'
 import { useEmail } from '@/views/apps/email/useEmail'
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 
 definePage({ meta: { layoutWrapperClasses: 'layout-content-height-fixed' } })
 
@@ -72,7 +72,7 @@ const emailViewMeta = computed(() => {
     returnValue.hasNextEmail = !!emails.value[openedEmailIndex + 1]
     returnValue.hasPreviousEmail = !!emails.value[openedEmailIndex - 1]
   }
-  
+
   return returnValue
 })
 
@@ -140,59 +140,30 @@ watch(() => route.params, () => {
 </script>
 
 <template>
-  <VLayout
-    style="min-block-size: 100%;"
-    class="email-app-layout"
-  >
-    <VNavigationDrawer
-      v-model="isLeftSidebarOpen"
-      absolute
-      touchless
-      location="start"
-      :temporary="$vuetify.display.mdAndDown"
-    >
-      <EmailLeftSidebarContent
-        :emails-meta="emailsMeta"
-        @toggle-compose-dialog-visibility="isComposeDialogVisible = !isComposeDialogVisible"
-      />
+  <VLayout style="min-block-size: 100%;" class="email-app-layout">
+    <VNavigationDrawer v-model="isLeftSidebarOpen" absolute touchless location="start"
+      :temporary="$vuetify.display.mdAndDown">
+      <EmailLeftSidebarContent :emails-meta="emailsMeta"
+        @toggle-compose-dialog-visibility="isComposeDialogVisible = !isComposeDialogVisible" />
     </VNavigationDrawer>
-    <EmailView
-      :email="openedEmail"
-      :email-meta="emailViewMeta"
-      @refresh="refreshOpenedEmail"
-      @navigated="changeOpenedEmail"
-      @close="openedEmail = null"
+    <EmailView :email="openedEmail" :email-meta="emailViewMeta" @refresh="refreshOpenedEmail"
+      @navigated="changeOpenedEmail" @close="openedEmail = null"
       @remove="handleActionClick('trash', openedEmail ? [openedEmail.id] : [])"
       @unread="handleActionClick('unread', openedEmail ? [openedEmail.id] : [])"
       @star="handleActionClick('star', openedEmail ? [openedEmail.id] : [])"
-      @unstar="handleActionClick('unstar', openedEmail ? [openedEmail.id] : [])"
-    />
+      @unstar="handleActionClick('unstar', openedEmail ? [openedEmail.id] : [])" />
     <VMain>
-      <VCard
-        flat
-        class="email-content-list h-100 d-flex flex-column"
-      >
+      <VCard flat class="email-content-list h-100 d-flex flex-column">
         <div class="d-flex align-center">
-          <IconBtn
-            class="d-lg-none ms-3"
-            @click="isLeftSidebarOpen = true"
-          >
+          <IconBtn class="d-lg-none ms-3" @click="isLeftSidebarOpen = true">
             <VIcon icon="tabler-menu-2" />
           </IconBtn>
 
           <!-- 👉 Search -->
-          <VTextField
-            v-model="q"
-            density="default"
-            class="email-search px-sm-2 flex-grow-1 py-1"
-            placeholder="Search mail"
-          >
+          <VTextField v-model="q" density="default" class="email-search px-sm-2 flex-grow-1 py-1"
+            placeholder="Search mail">
             <template #prepend-inner>
-              <VIcon
-                icon="tabler-search"
-                size="24"
-                class="me-1 text-medium-emphasis"
-              />
+              <VIcon icon="tabler-search" size="24" class="me-1 text-medium-emphasis" />
             </template>
           </VTextField>
         </div>
@@ -200,79 +171,42 @@ watch(() => route.params, () => {
         <!-- 👉 Action bar -->
         <div class="py-2 px-4 d-flex align-center d-flex gap-x-1">
           <!-- TODO: Make checkbox primary on indeterminate state -->
-          <VCheckbox
-            :model-value="selectAllEmailCheckbox"
-            :indeterminate="isSelectAllEmailCheckboxIndeterminate"
-            @update:model-value="selectAllCheckboxUpdate"
-          />
-          <div
-            class="w-100 d-flex align-center action-bar-actions gap-x-1"
-            :style="{
-              visibility:
-                isSelectAllEmailCheckboxIndeterminate || selectAllEmailCheckbox
-                  ? undefined
-                  : 'hidden',
-            }"
-          >
+          <VCheckbox :model-value="selectAllEmailCheckbox" :indeterminate="isSelectAllEmailCheckboxIndeterminate"
+            @update:model-value="selectAllCheckboxUpdate" />
+          <div class="w-100 d-flex align-center action-bar-actions gap-x-1" :style="{
+            visibility:
+              isSelectAllEmailCheckboxIndeterminate || selectAllEmailCheckbox
+                ? undefined
+                : 'hidden',
+          }">
             <!-- Trash -->
-            <IconBtn
-              v-show="('filter' in route.params ? route.params.filter !== 'trashed' : true)"
-              @click="handleActionClick('trash')"
-            >
-              <VIcon
-                icon="tabler-trash"
-                size="22"
-              />
-              <VTooltip
-                activator="parent"
-                location="top"
-              >
+            <IconBtn v-show="('filter' in route.params ? route.params.filter !== 'trashed' : true)"
+              @click="handleActionClick('trash')">
+              <VIcon icon="tabler-trash" size="22" />
+              <VTooltip activator="parent" location="top">
                 Delete Mail
               </VTooltip>
             </IconBtn>
             <!-- Mark unread/read -->
-            <IconBtn @click="isAllMarkRead ? handleActionClick('unread') : handleActionClick('read') ">
-              <VIcon
-                :icon="isAllMarkRead ? 'tabler-mail' : 'tabler-mail-opened'"
-                size="22"
-              />
-              <VTooltip
-                activator="parent"
-                location="top"
-              >
+            <IconBtn @click="isAllMarkRead ? handleActionClick('unread') : handleActionClick('read')">
+              <VIcon :icon="isAllMarkRead ? 'tabler-mail' : 'tabler-mail-opened'" size="22" />
+              <VTooltip activator="parent" location="top">
                 {{ isAllMarkRead ? 'Mark as Unread' : 'Mark as Read' }}
               </VTooltip>
             </IconBtn>
             <!-- Move to folder -->
             <IconBtn>
-              <VIcon
-                icon="tabler-folder"
-                size="22"
-              />
-              <VTooltip
-                activator="parent"
-                location="top"
-              >
+              <VIcon icon="tabler-folder" size="22" />
+              <VTooltip activator="parent" location="top">
                 Folder
               </VTooltip>
               <VMenu activator="parent">
                 <VList density="compact">
-                  <template
-                    v-for="moveTo in emailMoveToFolderActions"
-                    :key="moveTo.title"
-                  >
-                    <VListItem
-                      :class="shallShowMoveToActionFor(moveTo.action) ? 'd-flex' : 'd-none'"
-                      href="#"
-                      class="items-center"
-                      @click="handleMoveMailsTo(moveTo.action)"
-                    >
+                  <template v-for="moveTo in emailMoveToFolderActions" :key="moveTo.title">
+                    <VListItem :class="shallShowMoveToActionFor(moveTo.action) ? 'd-flex' : 'd-none'" href="#"
+                      class="items-center" @click="handleMoveMailsTo(moveTo.action)">
                       <template #prepend>
-                        <VIcon
-                          :icon="moveTo.icon"
-                          class="me-2"
-                          size="20"
-                        />
+                        <VIcon :icon="moveTo.icon" class="me-2" size="20" />
                       </template>
                       <VListItemTitle class="text-capitalize">
                         {{ moveTo.action }}
@@ -284,30 +218,16 @@ watch(() => route.params, () => {
             </IconBtn>
             <!-- Update labels -->
             <IconBtn>
-              <VIcon
-                icon="tabler-tag"
-                size="22"
-              />
-              <VTooltip
-                activator="parent"
-                location="top"
-              >
+              <VIcon icon="tabler-tag" size="22" />
+              <VTooltip activator="parent" location="top">
                 Label
               </VTooltip>
               <VMenu activator="parent">
                 <VList density="compact">
-                  <VListItem
-                    v-for="label in labels"
-                    :key="label.title"
-                    href="#"
-                    @click="async() => { await updateEmailLabels(selectedEmails, label.title); await fetchEmails(); } "
-                  >
+                  <VListItem v-for="label in labels" :key="label.title" href="#"
+                    @click="async () => { await updateEmailLabels(selectedEmails, label.title); await fetchEmails(); }">
                     <template #prepend>
-                      <VBadge
-                        inline
-                        :color="resolveLabelColor(label.title)"
-                        dot
-                      />
+                      <VBadge inline :color="resolveLabelColor(label.title)" dot />
                     </template>
                     <VListItemTitle class="ms-2 text-capitalize">
                       {{ label.title }}
@@ -319,53 +239,26 @@ watch(() => route.params, () => {
           </div>
           <VSpacer />
           <IconBtn @click="fetchEmails">
-            <VIcon
-              icon="tabler-refresh"
-              size="22"
-            />
+            <VIcon icon="tabler-refresh" size="22" />
           </IconBtn>
           <IconBtn>
-            <VIcon
-              icon="tabler-dots-vertical"
-              size="22"
-            />
+            <VIcon icon="tabler-dots-vertical" size="22" />
           </IconBtn>
         </div>
         <VDivider />
         <!-- 👉 Emails list -->
-        <PerfectScrollbar
-          tag="ul"
-          :options="{ wheelPropagation: false }"
-          class="email-list"
-        >
-          <li
-            v-for="email in emails"
-            v-show="emails?.length"
-            :key="email.id"
-            class="email-item d-flex align-center pa-4 gap-2 cursor-pointer"
-            :class="[{ 'email-read': email.isRead }]"
-            @click="openEmail(email)"
-          >
-            <VCheckbox
-              :model-value="selectedEmails.includes(email.id)"
-              class="flex-shrink-0"
-              @update:model-value="toggleSelectedEmail(email.id)"
-              @click.stop
-            />
-            <IconBtn
-              :color="email.isStarred ? 'warning' : 'default'"
-              @click.stop=" handleActionClick(email.isStarred ? 'unstar' : 'star', [email.id])"
-            >
-              <VIcon
-                icon="tabler-star"
-                size="22"
-              />
+        <PerfectScrollbar tag="ul" :options="{ wheelPropagation: false }" class="email-list">
+          <li v-for="email in emails" v-show="emails?.length" :key="email.id"
+            class="email-item d-flex align-center pa-4 gap-2 cursor-pointer" :class="[{ 'email-read': email.isRead }]"
+            @click="openEmail(email)">
+            <VCheckbox :model-value="selectedEmails.includes(email.id)" class="flex-shrink-0"
+              @update:model-value="toggleSelectedEmail(email.id)" @click.stop />
+            <IconBtn :color="email.isStarred ? 'warning' : 'default'"
+              @click.stop=" handleActionClick(email.isStarred ? 'unstar' : 'star', [email.id])">
+              <VIcon icon="tabler-star" size="22" />
             </IconBtn>
             <VAvatar size="32">
-              <VImg
-                :src="email.from.avatar"
-                :alt="email.from.name"
-              />
+              <VImg :src="email.from.avatar" :alt="email.from.name" />
             </VAvatar>
             <h6 class="text-h6">
               {{ email.from.name }}
@@ -375,17 +268,9 @@ watch(() => route.params, () => {
             <VSpacer />
 
             <!-- 👉 Email meta -->
-            <div
-              class="email-meta align-center gap-2"
-              :class="$vuetify.display.xs ? 'd-none' : ''"
-            >
-              <VIcon
-                v-for="label in email.labels"
-                :key="label"
-                icon="tabler-circle-filled"
-                size="10"
-                :color="resolveLabelColor(label)"
-              />
+            <div class="email-meta align-center gap-2" :class="$vuetify.display.xs ? 'd-none' : ''">
+              <VIcon v-for="label in email.labels" :key="label" icon="tabler-circle-filled" size="10"
+                :color="resolveLabelColor(label)" />
 
               <span class="text-sm text-disabled">
                 {{ formatDateToMonthShort(email.time) }}
@@ -394,65 +279,38 @@ watch(() => route.params, () => {
             <!-- 👉 Email actions -->
             <div class="email-actions d-none">
               <IconBtn @click.stop="handleActionClick('trash', [email.id])">
-                <VIcon
-                  icon="tabler-trash"
-                  size="22"
-                />
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
+                <VIcon icon="tabler-trash" size="22" />
+                <VTooltip activator="parent" location="top">
                   Delete Mail
                 </VTooltip>
               </IconBtn>
-              <IconBtn
-                class="mx-2"
-                @click.stop=" handleActionClick(email.isRead ? 'unread' : 'read', [email.id])"
-              >
-                <VIcon
-                  :icon="email.isRead ? 'tabler-mail' : 'tabler-mail-opened'"
-                  size="22"
-                />
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
+              <IconBtn class="mx-2" @click.stop=" handleActionClick(email.isRead ? 'unread' : 'read', [email.id])">
+                <VIcon :icon="email.isRead ? 'tabler-mail' : 'tabler-mail-opened'" size="22" />
+                <VTooltip activator="parent" location="top">
                   {{ email.isRead ? 'Mark as Unread' : 'Mark as Read' }}
                 </VTooltip>
               </IconBtn>
               <IconBtn @click.stop="handleActionClick('spam', [email.id])">
-                <VIcon
-                  icon="tabler-info-circle"
-                  size="22"
-                />
-                <VTooltip
-                  activator="parent"
-                  location="top"
-                >
+                <VIcon icon="tabler-info-circle" size="22" />
+                <VTooltip activator="parent" location="top">
                   Move to Spam
                 </VTooltip>
               </IconBtn>
             </div>
           </li>
-          <li
-            v-show="!emails.length"
-            class="py-4 px-5 text-center"
-          >
+          <li v-show="!emails.length" class="py-4 px-5 text-center">
             <span class="text-high-emphasis">No items found.</span>
           </li>
         </PerfectScrollbar>
       </VCard>
-      <ComposeDialog
-        v-show="isComposeDialogVisible"
-        @close="isComposeDialogVisible = false"
-      />
+      <ComposeDialog v-show="isComposeDialogVisible" @close="isComposeDialogVisible = false" />
     </VMain>
   </VLayout>
 </template>
 
 <style lang="scss">
-@use "@styles/variables/vuetify.scss";
-@use "@core-scss/base/mixins.scss";
+@use "@styles/variables/vuetify";
+@use "@core-scss/base/mixins";
 
 // ℹ️ Remove border. Using variant plain cause UI issue, caret isn't align in center
 .email-search {
@@ -499,7 +357,7 @@ watch(() => route.params, () => {
       background-color: rgba(var(--v-theme-on-surface), var(--v-hover-opacity));
     }
 
-    & + .email-item {
+    &+.email-item {
       border-block-start: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
     }
   }
@@ -524,7 +382,7 @@ watch(() => route.params, () => {
       }
     }
 
-    + .email-item {
+    +.email-item {
       border-color: transparent;
     }
 

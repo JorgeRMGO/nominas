@@ -155,12 +155,12 @@ const checkbox = ref(false)
                       Aviso de privacidad
                       <VTooltip location="bottom">
                         <template #activator="{ props }">
-                          <a href="https://vuetifyjs.com/" target="_blank" rel="noopener noreferrer" v-bind="props"
+                          <a href="././privacy-terms.vue" target="_blank" rel="noopener noreferrer" v-bind="props"
                             @click.stop>
                             GO
                           </a>
                         </template>
-                        Opens in new window
+                        Aviso de privacidad
                       </VTooltip>
                     </div>
                   </template>
